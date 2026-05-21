@@ -1,16 +1,17 @@
 from odoo import fields, models
+from datetime import timedelta
 
 class Property(models.Model):
     _name = 'estate_property'
     _description = 'Real Estate Property'
 
     name = fields.Char(string='Title', required=True)
-    description = fields.Text(string='Description')
+    description = fields.Text(string='Description', help='Description of the property')
     postcode = fields.Char(string='Postcode')
-    date_availability = fields.Date(string='Available From')
+    date_availability = fields.Date(string='Available From', copy=False, default=lambda self: fields.Date.today() + timedelta(days=90))
     expected_price = fields.Float(string='Expected Price', required=True)
-    selling_price = fields.Float(string='Selling Price')
-    bedrooms = fields.Integer(string='Bedrooms')
+    selling_price = fields.Float(string='Selling Price', readonly=True, copy=False)
+    bedrooms = fields.Integer(string='Bedrooms', default=2)
     living_area = fields.Integer(string='Living Area')
     facades = fields.Integer(string='Facades')
     garage = fields.Boolean(string='Garage')
@@ -24,4 +25,16 @@ class Property(models.Model):
             ('east', 'East'),
             ('west', 'West')
         ]
+    )
+    active = fields.Boolean(string='Active', default=True)
+    state = fields.Selection(
+        string='Status',
+        selection=[
+            ('new', 'New'),
+            ('offer_received', 'Offer Received'),
+            ('offer_accepted', 'Offer Accepted'),
+            ('sold', 'Sold'),
+            ('canceled', 'Canceled'),
+        ],
+        default='new'
     )
