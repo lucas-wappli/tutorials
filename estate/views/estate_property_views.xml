@@ -57,6 +57,27 @@
         </field>
     </record>
 
+    <!-- search view -->
+    <record id="estate_property_view_search" model="ir.ui.view">
+        <field name="name">estate.property.search</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+                <field name="postcode" />
+                <field name="expected_price" />
+                <field name="bedrooms" />
+                <field name="living_area" />
+                <field name="facades" />
+                <separator />
+                <!-- available filter - show properties with available date before today and state not in sold or canceled -->
+                <filter string="Available" name="available"
+                        domain="[('date_availability', '&lt;=', context_today()), ('state', 'not in', ['sold', 'canceled'])]"/>
+                <filter string="Postcode" name="group_by_postcode" context="{'group_by': 'postcode'}"/>
+            </search>
+        </field>
+    </record>
+
     <record id="estate_property_action" model="ir.actions.act_window">
         <field name="name">Properties</field>
         <field name="res_model">estate.property</field>
