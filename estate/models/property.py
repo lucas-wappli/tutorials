@@ -2,7 +2,7 @@ from odoo import fields, models
 from datetime import timedelta
 
 class Property(models.Model):
-    _name = 'estate_property'
+    _name = 'estate.property'
     _description = 'Real Estate Property'
 
     name = fields.Char(string='Title', required=True)
