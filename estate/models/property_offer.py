@@ -6,6 +6,11 @@ class PropertyOffer(models.Model):
     _name = 'estate.property.offer'
     _description = 'Real Estate Property Offer'
 
+    _positive_price = models.Constraint(
+        'CHECK(price > 0)',
+        'Offer price must be strictly positive.'
+    )
+
     price = fields.Float(string='Offer Price', required=True)
     status = fields.Selection(
         string='Status', 
@@ -39,8 +44,8 @@ class PropertyOffer(models.Model):
                 raise UserError("You cannot accept an offer for a property that already has an accepted offer.")
             else:
                 offer.status = 'accepted'
-                offer.property_id.selling_price = offer.price
                 offer.property_id.state = 'offer_accepted'
+                offer.property_id.selling_price = offer.price
                 offer.property_id.buyer_id = offer.partner_id
             return True
 
@@ -49,8 +54,8 @@ class PropertyOffer(models.Model):
             if offer.property_id.state in ['sold', 'canceled']:
                 raise UserError("You cannot refuse an offer for a property that is already sold or canceled.")
             elif offer.property_id.state == 'offer_accepted' and offer.status == 'accepted':
-                offer.property_id.selling_price = 0
                 offer.property_id.state = 'offer_received'
+                offer.property_id.selling_price = 0
                 offer.property_id.buyer_id = False
                 offer.status = 'refused'
             else:

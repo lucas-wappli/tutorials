@@ -1,10 +1,19 @@
 from odoo import fields, models, api
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from datetime import timedelta
 
 class Property(models.Model):
     _name = 'estate.property'
     _description = 'Real Estate Property'
+
+    _unique_name = models.Constraint(
+        'UNIQUE(name)',
+        'The name of the property must be unique.'
+    )
+    _positive_price = models.Constraint(
+        'CHECK(expected_price > 0 AND selling_price >= 0)',
+        'Expected price must be strictly positive and selling price must be non-negative.'
+    )
 
     name = fields.Char(string='Title', required=True)
     description = fields.Text(string='Description', help='Description of the property')
@@ -45,7 +54,13 @@ class Property(models.Model):
     salesman_id = fields.Many2one('res.users', string='Salesman', default=lambda self: self.env.user)
     buyer_id = fields.Many2one('res.partner', string='Buyer', readonly=True, copy=False)
     tag_ids = fields.Many2many('estate.property.tag', string='Property Tags')
-    offer_ids = fields.One2many('estate.property.offer', 'property_id', string='Offers')
+    offer_ids = fields.One2many('estate.property.offer', 'property_id', string='Offers', copy=False)
+
+    @api.constrains('selling_price', 'expected_price')
+    def check_price(self):
+        for record in self:
+            if record.state not in ['new', 'offer_received'] and record.selling_price < record.expected_price * 0.9:    
+                raise ValidationError("The selling price cannot be lower than 90% of the expected price.")
 
     @api.depends('living_area', 'garden_area')
     def _compute_total_area(self):
@@ -81,3 +96,8 @@ class Property(models.Model):
             else:
                 record.state = 'canceled'
             return True
+
+    def copy(self, default=None):
+        default = dict(default or {})
+        default.setdefault('name', f"{self.name} (copy)")
+        return super().copy(default)
