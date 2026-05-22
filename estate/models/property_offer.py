@@ -15,7 +15,7 @@ class PropertyOffer(models.Model):
         ]
     )
     validity = fields.Integer(string='Validity (days)', default=7)
-    deadline = fields.Date(string='Deadline', compute='_compute_deadline')
+    deadline = fields.Date(string='Deadline', compute='_compute_deadline', inverse='_inverse_deadline', store=True)
     partner_id = fields.Many2one('res.partner', string='Potential Buyer', required=True)
     property_id = fields.Many2one('estate.property', string='Property', required=True)
 
@@ -24,3 +24,8 @@ class PropertyOffer(models.Model):
         for offer in self:
             date = offer.create_date.date() if offer.create_date else fields.Date.today()
             offer.deadline = date + timedelta(days=offer.validity)
+
+    def _inverse_deadline(self):
+        for offer in self:
+            date = offer.create_date.date() if offer.create_date else fields.Date.today()
+            offer.validity = (offer.deadline - date).days
