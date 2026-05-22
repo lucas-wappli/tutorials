@@ -1,4 +1,5 @@
 from odoo import fields, models, api
+from odoo.exceptions import UserError
 from datetime import timedelta
 
 class PropertyOffer(models.Model):
@@ -29,3 +30,30 @@ class PropertyOffer(models.Model):
         for offer in self:
             date = offer.create_date.date() if offer.create_date else fields.Date.today()
             offer.validity = (offer.deadline - date).days
+
+    def accept_offer(self):
+        for offer in self:
+            if offer.property_id.state in ['sold', 'canceled']:
+                raise UserError("You cannot accept an offer for a property that is already sold or canceled.")
+            elif offer.property_id.state == 'offer_accepted':
+                raise UserError("You cannot accept an offer for a property that already has an accepted offer.")
+            else:
+                offer.status = 'accepted'
+                offer.property_id.selling_price = offer.price
+                offer.property_id.state = 'offer_accepted'
+                offer.property_id.buyer_id = offer.partner_id
+            return True
+
+    def refuse_offer(self):
+        for offer in self:
+            if offer.property_id.state in ['sold', 'canceled']:
+                raise UserError("You cannot refuse an offer for a property that is already sold or canceled.")
+            elif offer.property_id.state == 'offer_accepted' and offer.status == 'accepted':
+                offer.property_id.selling_price = 0
+                offer.property_id.state = 'offer_received'
+                offer.property_id.buyer_id = False
+                offer.status = 'refused'
+            else:
+                offer.status = 'refused'
+        return True
+            
