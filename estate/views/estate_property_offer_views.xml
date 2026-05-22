@@ -1,0 +1,17 @@
+<odoo>
+
+    <!-- list view -->
+    <record id="estate_property_offer_view_tree" model="ir.ui.view">
+        <field name="name">estate.property.offer.list</field>
+        <field name="model">estate.property.offer</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="price" width="100"/>
+                <field name="partner_id" width="200"/>
+                <field name="validity" width="100"/>
+                <field name="deadline" width="100"/>
+            </list>
+        </field>
+    </record>
+
+</odoo>
