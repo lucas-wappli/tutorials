@@ -59,7 +59,7 @@ class Property(models.Model):
     @api.constrains('selling_price', 'expected_price')
     def check_price(self):
         for record in self:
-            if record.selling_price < record.expected_price * 0.9:    
+            if record.state not in ['new', 'offer_received'] and record.selling_price < record.expected_price * 0.9:    
                 raise ValidationError("The selling price cannot be lower than 90% of the expected price.")
 
     @api.depends('living_area', 'garden_area')
