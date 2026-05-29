@@ -60,15 +60,13 @@
                                 <field name="total_area"/> 
                             </group>
                         </page>
+                        <page string="Offers">
+                            <field name="offer_ids" readonly='True'/>
+                        </page>
                         <page string="Other info">
                             <group>
                                 <field name="salesman_id"/>
                                 <field name="buyer_id"/>
-                            </group>
-                        </page>
-                        <page string="Offers">
-                            <group>
-                                <field name="offer_ids"/>
                             </group>
                         </page>
                     </notebook>

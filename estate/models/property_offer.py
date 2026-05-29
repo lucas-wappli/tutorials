@@ -11,7 +11,7 @@ class PropertyOffer(models.Model):
         'Offer price must be strictly positive.'
     )
 
-    price = fields.Float(string='Offer Price', required=True)
+    price = fields.Float(string='Price', required=True)
     status = fields.Selection(
         string='Status', 
         copy=False, 
