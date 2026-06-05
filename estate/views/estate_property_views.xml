@@ -7,6 +7,7 @@
         <field name="model">estate.property</field>
         <field name="arch" type="xml">
             <list>
+                <field name="sequence" widget="handle"/>
                 <field name="name" width="300"/>
                 <field name="postcode" width="50"/>
                 <field name="bedrooms" width="50"/>
@@ -61,7 +62,7 @@
                             </group>
                         </page>
                         <page string="Offers">
-                            <field name="offer_ids" readonly='True'/>
+                            <field name="offer_ids" />
                         </page>
                         <page string="Other info">
                             <group>

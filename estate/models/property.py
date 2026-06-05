@@ -18,6 +18,7 @@ class Property(models.Model):
     )
 
     name = fields.Char(string='Title', required=True)
+    sequence = fields.Integer('Sequence', default=1, help="Used to order properties.")
     description = fields.Text(string='Description', help='Description of the property')
     postcode = fields.Char(string='Postcode', size=20)
     date_availability = fields.Date(string='Available From', copy=False, default=lambda self: fields.Date.today() + timedelta(days=90))
