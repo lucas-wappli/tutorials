@@ -63,4 +63,13 @@ class PropertyOffer(models.Model):
             else:
                 offer.status = 'refused'
         return True
-            
+
+    @api.model
+    def create(self, vals_list):
+        for vals in vals_list:
+            prop = self.env['estate.property'].browse(vals['property_id'])
+            if prop.best_offer and vals['price'] <= prop.best_offer:
+                raise UserError("The offer price must be higher than the current best offer of %s." % prop.best_offer)
+            if prop.state == 'new':
+                prop.state = 'offer_received'
+        return super().create(vals_list)
