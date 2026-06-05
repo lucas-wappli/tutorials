@@ -5,7 +5,7 @@
         <field name="name">estate.property.offer.list</field>
         <field name="model">estate.property.offer</field>
         <field name="arch" type="xml">
-            <list>
+            <list edit="true" editable="top" decoration-success="status == 'accepted'" decoration-danger="status == 'refused'">
                 <field name="price" width="100"/>
                 <field name="partner_id" width="200"/>
                 <field name="validity" width="100"/>
