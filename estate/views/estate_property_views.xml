@@ -26,7 +26,8 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <button name="action_sold" string="Sold" type="object" invisible="state in ['sold', 'canceled']"/>
+                    <button name="action_sold" string="Sold" type="object" invisible="state in ['offer_accepted', 'sold', 'canceled']"/>
+                    <button name="action_sold" string="Sold" class="btn-primary" type="object" invisible="state != 'offer_accepted'"/>
                     <button name="action_cancel" string="Canceled" type="object" invisible="state in ['sold', 'canceled']"/>
                     <field name="state" widget="statusbar" statusbar_visible="new, offer_received, offer_accepted, sold"/>
                 </header>
@@ -37,7 +38,7 @@
                     <group>
                         <group>
                             <field name='tag_ids' widget='many2many_tags' options="{'color_field': 'color'}"/>
-                            <field name="type_id"/>
+                            <field name="type_id" widget="many2one" options="{'no_create': True}"/>
                             <field name="postcode"/>
                             <field name="date_availability"/>
                         </group>
@@ -56,13 +57,13 @@
                                 <field name="facades"/>
                                 <field name="garage"/>
                                 <field name="garden"/>
-                                <field name="garden_area"/>
-                                <field name="garden_orientation"/>
+                                <field name="garden_area" invisible="not garden"/>
+                                <field name="garden_orientation" invisible="not garden"/>
                                 <field name="total_area"/> 
                             </group>
                         </page>
                         <page string="Offers">
-                            <field name="offer_ids" />
+                            <field name="offer_ids" readonly="state in ['offer_accepted', 'sold', 'canceled']"/>
                         </page>
                         <page string="Other info">
                             <group>
