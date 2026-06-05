@@ -6,11 +6,13 @@
         <field name="model">estate.property.offer</field>
         <field name="arch" type="xml">
             <list decoration-success="status == 'accepted'" decoration-danger="status == 'refused'">
-                <field name="property_id" width="200" column_invisible="context.get('hide_property')"/>
+                <field name="property_id" width="200" column_invisible="context.get('property_view')"/>
                 <field name="price" width="100"/>
                 <field name="partner_id" width="200"/>
                 <field name="validity" width="100"/>
                 <field name="deadline" width="100"/>
+                <button name="accept_offer" type="object" icon="fa-check" title="Accept Offer" column_invisible="context.get('property_type_view')"/>
+                <button name="refuse_offer" type="object" icon="fa-times" title="Refuse Offer" column_invisible="context.get('property_type_view')"/>
                 <field name="status" optional="hide"/>
             </list>
         </field>

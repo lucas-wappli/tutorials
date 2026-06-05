@@ -105,3 +105,8 @@ class Property(models.Model):
         default = dict(default or {})
         default.setdefault('name', f"{self.name} (copy)")
         return super().copy(default)
+
+    def ondelete(self):
+        for record in self:
+            if record.state not in ['new', 'canceled']:
+                raise UserError("You cannot delete a property that has offers or has been sold.")

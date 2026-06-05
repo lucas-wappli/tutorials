@@ -22,6 +22,6 @@ class PropertyType(models.Model):
             'type': 'ir.actions.act_window',
             'res_model': 'estate.property.offer',
             'view_mode': 'list',
-            'context': {'hide_property': False},
+            'context': {'property_type_view': True},
             'domain': [('property_type_id', '=', self.id)],
         }
